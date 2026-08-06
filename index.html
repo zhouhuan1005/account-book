@@ -202,13 +202,14 @@ body{
                     <div class="tx-title">🔍 流水多维度查询</div>
                 </div>
                 <div class="filter-panel">
-                    <select class="filter-select" id="dateFilter" onchange="refresh()">
+                    <select class="filter-select" id="dateFilter" onchange="renderList()">
                         <option value="all">全部日期</option>
                     </select>
-                    <select class="filter-select" id="catFilter" onchange="refresh()">
+                    <select class="filter-select" id="catFilter" onchange="renderList()">
                         <option value="all">全部分类</option>
                     </select>
                     <button class="tx-filter" onclick="toggleFilter()">收支类型：全部</button>
+                    <button class="tx-filter" onclick="resetFilter()">重置筛选</button>
                 </div>
                 <!-- 筛选后汇总统计 -->
                 <div class="summary-block" id="filterSummary">
@@ -334,12 +335,24 @@ function setD(d){localStorage.setItem(DB,JSON.stringify(d));}
 function getG(m){return(JSON.parse(localStorage.getItem(GOAL_DB)||'{}'))[m]||3000;}
 function setG(m,v){let g=JSON.parse(localStorage.getItem(GOAL_DB)||'{}');g[m]=parseFloat(v)||0;localStorage.setItem(GOAL_DB,JSON.stringify(g));}
 
+// 新增：重置筛选
+function resetFilter(){
+    document.getElementById('dateFilter').value = 'all';
+    document.getElementById('catFilter').value = 'all';
+    filter = 'all';
+    document.querySelector('.tx-filter').textContent = '收支类型：全部';
+    renderList();
+}
+
 // 新增：动态填充日期下拉、分类下拉
 function initFilterOptions(){
     const monthData = getD()[curMonth]||[];
     const dateSet = new Set();
     const dateSel = document.getElementById('dateFilter');
     const catSel = document.getElementById('catFilter');
+    // 记住当前选中值
+    const keepDateVal = dateSel.value;
+    const keepCatVal = catSel.value;
     // 重置选项
     dateSel.innerHTML = `<option value="all">全部日期</option>`;
     catSel.innerHTML = `<option value="all">全部分类</option>`;
@@ -359,6 +372,9 @@ function initFilterOptions(){
         opt.textContent = c.name;
         catSel.appendChild(opt);
     });
+    // 恢复选中状态
+    if([...dateSel.options].some(o=>o.value===keepDateVal)) dateSel.value = keepDateVal;
+    if([...catSel.options].some(o=>o.value===keepCatVal)) catSel.value = keepCatVal;
 }
 
 // ========== 初始化 ==========
@@ -378,7 +394,6 @@ function showPage(name){
 }
 
 function refresh(){
-    initFilterOptions();
     renderOverview();
     renderSaving();
     renderPie();
@@ -482,6 +497,8 @@ function changeMonth(delta){
     curMonth=fmtMonth(dt);
     document.getElementById('currentMonth').textContent=curMonth;
     document.getElementById('goalInput').value=getG(curMonth);
+    // 切换月份重建筛选下拉
+    initFilterOptions();
     refresh();
 }
 
@@ -513,7 +530,10 @@ function addTx(){
     if(!d[m])d[m]=[];
     d[m].push({id:Date.now(),type:curType,amount:amt,category:selCat,date:date,note:note});
     setD(d);
-    if(m===curMonth)refresh();
+    if(m===curMonth){
+        initFilterOptions();
+        refresh();
+    }
     closeModal();
     document.getElementById('amountInput').value='';
     document.getElementById('noteInput').value='';
@@ -523,7 +543,10 @@ function addTx(){
 function delTx(id){
     if(!confirm('确定删除这条记录？'))return;
     const d=getD();
-    if(d[curMonth]){d[curMonth]=d[curMonth].filter(t=>t.id!==id);setD(d);refresh();}
+    if(d[curMonth]){d[curMonth]=d[curMonth].filter(t=>t.id!==id);setD(d);
+        initFilterOptions();
+        refresh();
+    }
 }
 
 function saveGoal(){
@@ -552,6 +575,7 @@ function importData(input){
             const d=JSON.parse(e.target.result);
             if(d.transactions)setD(d.transactions);
             if(d.goals)localStorage.setItem(GOAL_DB,JSON.stringify(d.goals));
+            initFilterOptions();
             refresh();showToast('✅ 恢复成功');
         }catch(err){showToast('❌ 文件格式错误');}
     };
@@ -562,6 +586,7 @@ function clearAll(){
     if(!confirm('⚠️ 确定清除所有数据？不可恢复！'))return;
     if(!confirm('再次确认：真的要清空吗？'))return;
     localStorage.removeItem(DB);localStorage.removeItem(GOAL_DB);
+    initFilterOptions();
     refresh();showToast('已清除所有数据');
 }
 
