@@ -51,7 +51,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .legend-text{flex:1;color:var(--text-light)}
 .legend-value{font-weight:700;color:var(--text);font-size:13px}
-.tx-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+/* 新增筛选面板样式 */
+.filter-panel{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.filter-select{padding:8px 12px;border:2px solid var(--border);border-radius:12px;font-size:13px;background:#f7fafc;outline:none;color:var(--text)}
+.filter-select:focus{border-color:var(--primary)}
+.summary-block{background:#f7fafc;border-radius:12px;padding:12px;margin-bottom:12px;font-size:14px}
+.summary-block strong{color:var(--primary)}
+.tx-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .tx-title{font-size:16px;font-weight:700}
 .tx-filter{background:#edf2f7;border:none;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer}
 .tx-list{max-height:380px;overflow-y:auto}
@@ -95,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
 .setting-label{font-size:15px;font-weight:600}
 .setting-input{width:100px;padding:8px 12px;border:2px solid var(--border);border-radius:12px;text-align:right;font-size:15px;font-weight:700;background:#f7fafc;outline:none}
 .setting-input:focus{border-color:var(--primary)}
-.setting-btn{background:#edf2f7;border:none;padding:8px 16px;border-radius:12px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer}
+.setting-btn{background:#edf2f7;border:none;padding:8px 16px;border-radius:12px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer}
 .setting-btn.danger{color:var(--danger);background:#fff5f5}
 .toast{position:fixed;top:max(20px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(45,55,72,0.95);color:#fff;padding:14px 28px;border-radius:16px;z-index:3000;font-size:14px;font-weight:600;box-shadow:var(--shadow);transition:transform .3s ease}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -167,10 +173,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Micr
                 </div>
             </div>
             
+            <!-- 新增：多维度筛选面板 -->
             <div class="card">
                 <div class="tx-header">
-                    <div class="tx-title">📝 最近记录</div>
-                    <button class="tx-filter" onclick="toggleFilter()">全部</button>
+                    <div class="tx-title">🔍 流水多维度查询</div>
+                </div>
+                <div class="filter-panel">
+                    <select class="filter-select" id="dateFilter" onchange="refresh()">
+                        <option value="all">全部日期</option>
+                    </select>
+                    <select class="filter-select" id="catFilter" onchange="refresh()">
+                        <option value="all">全部分类</option>
+                    </select>
+                    <button class="tx-filter" onclick="toggleFilter()">收支类型：全部</button>
+                </div>
+                <!-- 筛选后汇总统计 -->
+                <div class="summary-block" id="filterSummary">
+                    筛选汇总：收入 ¥0.00 ｜ 支出 ¥0.00
+                </div>
+                <div class="tx-header">
+                    <div class="tx-title">📝 记账流水明细</div>
                 </div>
                 <div class="tx-list" id="txList">
                     <div class="empty-state"><div class="emoji">📝</div><div>本月还没有记账</div><div>点击右下角 + 开始</div></div>
@@ -289,12 +311,40 @@ function setD(d){localStorage.setItem(DB,JSON.stringify(d));}
 function getG(m){return(JSON.parse(localStorage.getItem(GOAL_DB)||'{}'))[m]||3000;}
 function setG(m,v){let g=JSON.parse(localStorage.getItem(GOAL_DB)||'{}');g[m]=parseFloat(v)||0;localStorage.setItem(GOAL_DB,JSON.stringify(g));}
 
+// 新增：动态填充日期下拉、分类下拉
+function initFilterOptions(){
+    const monthData = getD()[curMonth]||[];
+    const dateSet = new Set();
+    const dateSel = document.getElementById('dateFilter');
+    const catSel = document.getElementById('catFilter');
+    // 重置选项
+    dateSel.innerHTML = `<option value="all">全部日期</option>`;
+    catSel.innerHTML = `<option value="all">全部分类</option>`;
+    // 提取本月所有日期并排序
+    monthData.forEach(item=>dateSet.add(item.date));
+    [...dateSet].sort().forEach(d=>{
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        dateSel.appendChild(opt);
+    });
+    // 提取所有收支分类
+    const allCats = [...expCats,...incCats];
+    allCats.forEach(c=>{
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        catSel.appendChild(opt);
+    });
+}
+
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('dateInput').value = fmtDate(new Date());
     document.getElementById('currentMonth').textContent = curMonth;
     document.getElementById('goalInput').value = getG(curMonth);
     renderCats();
+    initFilterOptions();
     refresh();
 });
 
@@ -304,7 +354,13 @@ function showPage(name){
     if(name==='settings'){document.getElementById('pageSettings').classList.add('active');}
 }
 
-function refresh(){renderOverview();renderSaving();renderPie();renderList();}
+function refresh(){
+    initFilterOptions();
+    renderOverview();
+    renderSaving();
+    renderPie();
+    renderList();
+}
 
 function renderOverview(){
     const d=getD()[curMonth]||[];
@@ -357,22 +413,35 @@ function renderPie(){
     }).join('');
 }
 
+// 核心：筛选流水+汇总统计
 function renderList(){
-    const d=getD()[curMonth]||[];
-    let list=d;
-    if(filter!=='all')list=d.filter(t=>t.type===filter);
+    const raw=getD()[curMonth]||[];
+    // 获取筛选条件
+    const chooseDate = document.getElementById('dateFilter').value;
+    const chooseCat = document.getElementById('catFilter').value;
+    // 多层筛选：日期→分类→收支类型
+    let list = raw;
+    if(chooseDate!=='all') list = list.filter(t=>t.date===chooseDate);
+    if(chooseCat!=='all') list = list.filter(t=>t.category===chooseCat);
+    if(filter!=='all') list = list.filter(t=>t.type===filter);
+    // 按日期倒序排序
     list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    // 计算筛选后的汇总
+    let sumInc=0,sumExp=0;
+    list.forEach(t=>t.type==='income'?sumInc+=t.amount:sumExp+=t.amount);
+    document.getElementById('filterSummary').innerText = `筛选汇总：收入 ¥${sumInc.toFixed(2)} ｜ 支出 ¥${sumExp.toFixed(2)}`;
     const el=document.getElementById('txList');
     if(!list.length){
-        el.innerHTML='<div class="empty-state"><div class="emoji">📝</div><div>本月还没有记账</div><div>点击右下角 + 开始</div></div>';return;
+        el.innerHTML='<div class="empty-state"><div class="emoji">📝</div><div>当前筛选条件下无记账记录</div></div>';return;
     }
+    // 渲染流水条目
     el.innerHTML=list.map(t=>{
         const cats=t.type==='income'?incCats:expCats;
         const c=cats.find(x=>x.id===t.category)||{name:t.category,icon:'💰',color:'#ccc'};
         const sign=t.type==='income'?'+':'-';
         return `<div class="tx-item">
             <div class="tx-icon" style="background:${c.color}20">${c.icon}</div>
-            <div class="tx-info"><div class="tx-category">${c.name}${t.note?' · '+t.note:''}</div><div class="tx-note">${t.date.slice(5)}</div></div>
+            <div class="tx-info"><div class="tx-category">${c.name}${t.note?' · '+t.note:''}</div><div class="tx-note">${t.date}</div></div>
             <div class="tx-amount ${t.type}">${sign}¥${t.amount.toFixed(2)}</div>
             <div class="tx-delete" onclick="event.stopPropagation();delTx(${t.id})">🗑️</div>
         </div>`;
@@ -400,7 +469,7 @@ function setType(t){
 }
 
 function toggleFilter(){
-    const types=['all','expense','income'],labels={all:'全部',expense:'支出',income:'收入'};
+    const types=['all','expense','income'],labels={all:'收支类型：全部',expense:'收支类型：仅支出',income:'收支类型：仅收入'};
     const i=types.indexOf(filter);
     filter=types[(i+1)%types.length];
     document.querySelector('.tx-filter').textContent=labels[filter];
