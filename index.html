@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#667eea">
+<html lang="zh-CN" data-page-node-id="fBElrQZ5JvNfRGMnNWlf67">
+<head data-page-node-id="sbJhOASrhgD2vrzgsKOWPj">
+<meta charset="UTF-8" data-page-node-id="nHUHXCG5o5ADFcadC85cei">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" data-page-node-id="2qrnhIokPtQK1YDArlfPhq">
+<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="tNY8lrue8vPzv6wgCxHFf9">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" data-page-node-id="Idk9mFFTGlTWwswoYXGmpa">
+<meta name="theme-color" content="#667eea" data-page-node-id="KXcdzhrRpj73NkL419loLg">
 <title>我的记账本</title>
 <style>
 :root{--primary:#667eea;--secondary:#764ba2;--success:#48bb78;--danger:#f56565;--bg:#f5f6fa;--card:#fff;--text:#2d3748;--text-light:#718096;--border:#e2e8f0;--shadow:0 4px 12px rgba(0,0,0,0.08)}
@@ -74,7 +74,7 @@ body{
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .legend-text{flex:1;color:var(--text-light)}
 .legend-value{font-weight:700;color:var(--text);font-size:13px}
-/* 新增筛选面板样式 */
+/* 筛选面板样式 */
 .filter-panel{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .filter-select{padding:8px 12px;border:2px solid var(--border);border-radius:12px;font-size:13px;background:#f7fafc;outline:none;color:var(--text)}
 .filter-select:focus{border-color:var(--primary)}
@@ -83,6 +83,7 @@ body{
 .tx-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .tx-title{font-size:16px;font-weight:700}
 .tx-filter{background:#edf2f7;border:none;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer}
+.tx-filter.active{background:linear-gradient(135deg,rgba(102,126,234,0.18),rgba(118,75,162,0.18));color:var(--primary);box-shadow:inset 0 0 0 2px rgba(102,126,234,0.35)}
 .tx-list{max-height:380px;overflow-y:auto}
 .tx-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid #f7fafc}
 .tx-item:last-child{border-bottom:none}
@@ -126,173 +127,231 @@ body{
 .setting-input:focus{border-color:var(--primary)}
 .setting-btn{background:#edf2f7;border:none;padding:8px 16px;border-radius:12px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer}
 .setting-btn.danger{color:var(--danger);background:#fff5f5}
+/* 存档列表样式 */
+.archive-tip{font-size:12px;color:var(--text-light);line-height:1.8;background:#f7fafc;border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.archive-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px;border:1px solid var(--border);border-radius:14px;margin-bottom:8px;background:#f7fafc}
+.archive-info{flex:1;min-width:0}
+.archive-date{font-size:14px;font-weight:700}
+.archive-meta{font-size:11px;color:var(--text-light);margin-top:3px;line-height:1.5}
+.archive-actions{display:flex;gap:6px;flex-shrink:0}
+.mini-btn{padding:6px 10px;border-radius:10px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:#e2e8f0;color:var(--text)}
+.mini-btn.primary{background:var(--primary);color:#fff}
+.mini-btn.danger{background:#fff5f5;color:var(--danger)}
 .toast{position:fixed;top:max(20px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(45,55,72,0.95);color:#fff;padding:14px 28px;border-radius:16px;z-index:3000;font-size:14px;font-weight:600;box-shadow:var(--shadow);transition:transform .3s ease}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .page{display:none}
 .page.active{display:block}
 </style>
 </head>
-<body>
-<div class="app">
-    <div class="page active" id="pageHome">
-        <div class="header">
-            <div class="header-top">
-                <h1>💰 我的记账本</h1>
-                <button class="settings-btn" onclick="showPage('settings')">⚙️</button>
+<body data-page-node-id="GbP0cL76ikNL2jFD0jzwyL">
+<div class="app" data-page-node-id="wQVaGrkXCDU9cv57Labbc2">
+    <div class="page active" id="pageHome" data-page-node-id="GEpON77XbDI9fQQO3y0QJW">
+        <div class="header" data-page-node-id="TuAu5ZfuvZjQCtgF9IL5zw">
+            <div class="header-top" data-page-node-id="MF8DmsWKuKSWH3uljh00fA">
+                <h1 data-page-node-id="gBlKEaHwCKkbfBcFSRDiZm">💰 我的记账本</h1>
+                <button class="settings-btn" onclick="showPage('settings')" data-page-node-id="zSUEKPrgSHNtOffBWPQcJF">⚙️</button>
             </div>
-            <div class="month-selector">
-                <button onclick="changeMonth(-1)">‹</button>
-                <span id="currentMonth">--</span>
-                <button onclick="changeMonth(1)">›</button>
+            <div class="month-selector" data-page-node-id="3sEMjvWHRrSqppaD40g181">
+                <button onclick="changeMonth(-1)" data-page-node-id="BW1SaSm6lWISgeTVUUBydw">‹</button>
+                <span id="currentMonth" data-page-node-id="ZqyJNss3CFjcZmCbJ0COPF">--</span>
+                <button onclick="changeMonth(1)" data-page-node-id="HTOfF2RA6oNF7cdergPC7B">›</button>
             </div>
         </div>
-        <div class="content">
-            <div class="card">
-                <div class="overview-stats">
-                    <div class="stat-item income">
-                        <div class="stat-label">月收入</div>
-                        <div class="stat-value" id="monthIncome">¥0</div>
+        <div class="content" data-page-node-id="7xCgPCgjhR5GVaMh8dkaqt">
+            <div class="card" data-page-node-id="1Wp23xSCwMpGCwSjmhz20k">
+                <div class="overview-stats" data-page-node-id="xte74G8tYO3CfO67bFE8T4">
+                    <div class="stat-item income" data-page-node-id="bL1YZ7EYNFRWrzKvFvSISV">
+                        <div class="stat-label" data-page-node-id="e9EF2ARpvwxC1sL7RrF5GU">月收入</div>
+                        <div class="stat-value" id="monthIncome" data-page-node-id="FFhFbQMp7H9Kr1tFWHXRG4">¥0</div>
                     </div>
-                    <div class="stat-item expense">
-                        <div class="stat-label">月支出</div>
-                        <div class="stat-value" id="monthExpense">¥0</div>
+                    <div class="stat-item expense" data-page-node-id="m5YSHw7mu89ex9BkJtSi0c">
+                        <div class="stat-label" data-page-node-id="Yt1WCkEVQ0wQIQwpLog4jn">月支出</div>
+                        <div class="stat-value" id="monthExpense" data-page-node-id="yVo5yIIUrAxnk3Hjidw0jz">¥0</div>
                     </div>
-                    <div class="stat-item balance">
-                        <div class="stat-label">结余</div>
-                        <div class="stat-value" id="monthBalance">¥0</div>
+                    <div class="stat-item balance" data-page-node-id="BFk4sj0AlwPvXzU4vg5RDA">
+                        <div class="stat-label" data-page-node-id="2em9hkwm1iSyNH7j4fybi7">结余</div>
+                        <div class="stat-value" id="monthBalance" data-page-node-id="AInGcib6TJuFVYxy29DwXB">¥0</div>
                     </div>
                 </div>
             </div>
             
-            <div class="card">
-                <div class="saving-header">
-                    <div class="saving-title">📊 存款目标</div>
-                    <div class="saving-status" id="savingStatus">--</div>
+            <div class="card" data-page-node-id="USJGmxOb2AJMgJcRyVTcAl">
+                <div class="saving-header" data-page-node-id="Nxoj59kaRhAhMSiYvlzgsa">
+                    <div class="saving-title" data-page-node-id="T0pCETE8da0fJsVINF6xvI">📊 存款目标</div>
+                    <div class="saving-status" id="savingStatus" data-page-node-id="JDd2EgQ9p5HshdXtr6LAGH">--</div>
                 </div>
-                <div class="ring-progress">
-                    <svg viewBox="0 0 140 140">
-                        <defs><linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#764ba2"/></linearGradient></defs>
-                        <circle class="ring-bg" cx="70" cy="70" r="60"/>
-                        <circle class="ring-fill" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="377" id="ringCircle"/>
+                <div class="ring-progress" data-page-node-id="2kMmv3y1En9sMgogzhKFra">
+                    <svg viewBox="0 0 140 140" data-page-node-id="5L5aqYD0he5QYDb2QqAjI7">
+                        <defs data-page-node-id="QQwlmzDTFZNZlDIhdY1FKJ"><linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%" data-page-node-id="Q6CLpRxXJr3K3jb2w3BK31"><stop offset="0%" stop-color="#667eea" data-page-node-id="pbUyGFEIEvY11uOQC9LYwx"/><stop offset="100%" stop-color="#764ba2" data-page-node-id="XjbniFgaWW3AvDmYggIxQt"/></linearGradient></defs>
+                        <circle class="ring-bg" cx="70" cy="70" r="60" data-page-node-id="uiJMr3Cv54pbd3DyF6eFp6"/>
+                        <circle class="ring-fill" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="377" id="ringCircle" data-page-node-id="6E7lPFyQIZ6xcirx1072u5"/>
                     </svg>
-                    <div class="ring-text">
-                        <div class="ring-percent" id="ringPercent">0%</div>
-                        <div class="ring-label">已达成</div>
+                    <div class="ring-text" data-page-node-id="hvIwY5ZhAOeAdusy2dpIxM">
+                        <div class="ring-percent" id="ringPercent" data-page-node-id="TFYvULMDBg7vO8POI0xidQ">0%</div>
+                        <div class="ring-label" data-page-node-id="msfv7Bx1X87iS3lfzgWjPR">已达成</div>
                     </div>
                 </div>
-                <div class="saving-detail">
-                    <span>实际 <strong id="actualSaving">¥0</strong></span>
-                    <span>目标 <strong id="planSaving">¥0</strong></span>
+                <div class="saving-detail" data-page-node-id="EyOprRLdxonf969AbvXSft">
+                    <span data-page-node-id="BfO4VpF3reyXIOx4FwNRfH">实际 <strong id="actualSaving" data-page-node-id="nQs1iaABrrD2XAaSET2AH6">¥0</strong></span>
+                    <span data-page-node-id="RAn2vEvlK2c7nN78mgLD8v">目标 <strong id="planSaving" data-page-node-id="RmK89GAVMT8EpCa2l2q9Mt">¥0</strong></span>
                 </div>
             </div>
             
-            <div class="card">
-                <div class="chart-title">📈 支出分类</div>
-                <div class="pie-chart-container">
-                    <div class="pie-chart" id="pieChart">
-                        <svg viewBox="0 0 140 140" width="130" height="130"><circle cx="70" cy="70" r="55" fill="#f7fafc"/><text x="70" y="75" text-anchor="middle" fill="#a0aec0" font-size="13" font-weight="600">暂无</text></svg>
+            <div class="card" data-page-node-id="WBZZQfz39WQAf9CCwshpeJ">
+                <div class="chart-title" data-page-node-id="RhmLjHs3xmCuKHXreI5q5O">📈 支出分类</div>
+                <div class="pie-chart-container" data-page-node-id="BDgLUvfn7W9P2PYvhx2cZr">
+                    <div class="pie-chart" id="pieChart" data-page-node-id="SNt5BvQ9Yz0KETmfyvk7OC">
+                        <svg viewBox="0 0 140 140" width="130" height="130" data-page-node-id="ejr7ejXtYYzes5fJX54TJR"><circle cx="70" cy="70" r="55" fill="#f7fafc" data-page-node-id="gP7zpQodSq9KDj3HgELfoI"/><text x="70" y="75" text-anchor="middle" fill="#a0aec0" font-size="13" font-weight="600" data-page-node-id="shbBvl8FWxoqhXbRcDzfaT">暂无</text></svg>
                     </div>
-                    <div class="pie-legend" id="pieLegend"></div>
+                    <div class="pie-legend" id="pieLegend" data-page-node-id="zmZgtbLO470ioT3GN5Ywd9"></div>
                 </div>
             </div>
             
-            <!-- 新增：多维度筛选面板 -->
-            <div class="card">
-                <div class="tx-header">
-                    <div class="tx-title">🔍 流水多维度查询</div>
+            <!-- 多维度筛选面板 + 排序 -->
+            <div class="card" data-page-node-id="Nk3V1ABRCI2ZHRFIfiYECy">
+                <div class="tx-header" data-page-node-id="lD7CnV8aU9lXZk4h2jIGtk">
+                    <div class="tx-title" data-page-node-id="SnoN4EN4DlaQENYJXkAYSB">🔍 流水多维度查询</div>
                 </div>
-                <div class="filter-panel">
-                    <select class="filter-select" id="dateFilter" onchange="renderList()">
-                        <option value="all">全部日期</option>
+                <div class="filter-panel" data-page-node-id="1t3VmQcH1UeS4S8FQ6nKtT">
+                    <select class="filter-select" id="dateFilter" onchange="renderList()" data-page-node-id="rSdLDHOML6u8uNEpC2UMTj">
+                        <option value="all" data-page-node-id="mSq4TPCqePK58MHD75EEL8">全部日期</option>
                     </select>
-                    <select class="filter-select" id="catFilter" onchange="renderList()">
-                        <option value="all">全部分类</option>
+                    <select class="filter-select" id="catFilter" onchange="renderList()" data-page-node-id="mSO6O88EHYsx2nCTUMr7HL">
+                        <option value="all" data-page-node-id="OBfvB2rEeQJPXF3SkqGkg1">全部分类</option>
                     </select>
-                    <button class="tx-filter" onclick="toggleFilter()">收支类型：全部</button>
-                    <button class="tx-filter" onclick="resetFilter()">重置筛选</button>
+                    <button class="tx-filter" id="typeFilterBtn" onclick="toggleFilter()" data-page-node-id="75tvDao8uBnOIL8TSTKKYy">收支类型：全部</button>
+                    <button class="tx-filter" id="sortBtn" onclick="toggleSort()" data-page-node-id="YCEFFWRu3zKSZY7MgnISA9">排序：时间↓</button>
+                    <button class="tx-filter" onclick="resetFilter()" data-page-node-id="qkStzS5tcTbZTDEOfvl2E6">↺ 重置</button>
                 </div>
                 <!-- 筛选后汇总统计 -->
-                <div class="summary-block" id="filterSummary">
+                <div class="summary-block" id="filterSummary" data-page-node-id="61qHcjTsVvULugBOQR5G59">
                     筛选汇总：收入 ¥0.00 ｜ 支出 ¥0.00
                 </div>
-                <div class="tx-header">
-                    <div class="tx-title">📝 记账流水明细</div>
+                <div class="tx-header" data-page-node-id="9YXLEPw1tzMSqhvm8snx3U">
+                    <div class="tx-title" data-page-node-id="kBo7zm8vv3pFjJMxYHTszv">📝 记账流水明细</div>
                 </div>
-                <div class="tx-list" id="txList">
-                    <div class="empty-state"><div class="emoji">📝</div><div>本月还没有记账</div><div>点击右下角 + 开始</div></div>
+                <div class="tx-list" id="txList" data-page-node-id="PN7PFPYBoZfHnCSQTalD4r">
+                    <div class="empty-state" data-page-node-id="gIlJgSeJfFcVGI3rLxhLPl"><div class="emoji" data-page-node-id="zUGHq87kh4HJ6KRbTxdGGp">📝</div><div data-page-node-id="M91EZZZddCOnETpm9irAKT">本月还没有记账</div><div data-page-node-id="SjjX85m57H3Ej0tRo2AMpJ">点击右下角 + 开始</div></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="page" id="pageSettings">
-        <div class="header">
-            <div class="header-top"><h1>⚙️ 设置</h1><button class="settings-btn" onclick="showPage('home')">✕</button></div>
+    <div class="page" id="pageSettings" data-page-node-id="eqRGoC9Zc7dPGeKJnnh0X9">
+        <div class="header" data-page-node-id="6XCMpDWdmg3fyDTHIbTNst">
+            <div class="header-top" data-page-node-id="EwnFPnmtq4JQOGfYlPjhcB"><h1 data-page-node-id="eBCprZZPaOo9hobsp7v11J">⚙️ 设置</h1><button class="settings-btn" onclick="showPage('home')" data-page-node-id="PF1oJzpwTJ63UYDnFG6yXe">✕</button></div>
         </div>
-        <div class="content">
-            <div class="card">
-                <div class="setting-item">
-                    <div class="setting-label">本月计划存款</div>
-                    <input type="number" class="setting-input" id="goalInput" value="3000" onchange="saveGoal()">
+        <div class="content" data-page-node-id="zOWMs7fuXDNd1QlMyxJeRO">
+            <div class="card" data-page-node-id="KLpQ5hE31jpIoxbj8XydiN">
+                <div class="setting-item" data-page-node-id="vKRHZD5KGxX1zj8wNKF1hQ">
+                    <div class="setting-label" data-page-node-id="eCKCZNQKL95BF05Swu0N4o">本月计划存款</div>
+                    <input type="number" class="setting-input" id="goalInput" value="3000" onchange="saveGoal()" data-page-node-id="KV2FhzHhVfE9YY4bHrGkCZ">
                 </div>
             </div>
-            <div class="card">
-                <div class="setting-item">
-                    <div class="setting-label">💾 导出数据备份</div>
-                    <button class="setting-btn" onclick="exportData()">导出</button>
+            <div class="card" data-page-node-id="7bEG4APkGMvHfjKUuGxcME">
+                <div class="setting-item" data-page-node-id="C2ofdwzPvbtAMADFiuOHL9">
+                    <div class="setting-label" data-page-node-id="EGstA31WjRMyM6orZRdc6N">💾 导出数据备份</div>
+                    <button class="setting-btn" onclick="exportData()" data-page-node-id="KFOEmGGxPlDAy1g4HFDFx9">导出</button>
                 </div>
-                <div class="setting-item">
-                    <div class="setting-label">📂 导入数据恢复</div>
-                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
-                    <button class="setting-btn" onclick="document.getElementById('importFile').click()">导入</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="setting-item">
-                    <div class="setting-label" style="color:var(--danger)">🗑️ 清除所有数据</div>
-                    <button class="setting-btn danger" onclick="clearAll()">清除</button>
+                <div class="setting-item" data-page-node-id="r9eW40iLzTtABWP5mKMqo5">
+                    <div class="setting-label" data-page-node-id="9tGNKuZZKUiYnWbhG2j9kF">📂 导入数据恢复</div>
+                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)" data-page-node-id="n762vzSd46iSDzv0HOyo6w">
+                    <button class="setting-btn" onclick="document.getElementById('importFile').click()" data-page-node-id="DuDaZLSDTWs4frrjstQqns">导入</button>
                 </div>
             </div>
-            <div style="margin:20px 16px;padding:16px;background:var(--card);border-radius:16px;font-size:13px;color:var(--text-light);line-height:1.8;box-shadow:var(--shadow)">
-                <strong style="color:var(--text)">💡 推荐方案</strong><br>
-                1. 注册 GitHub → 上传本文件 → 开启 Pages<br>
-                2. 获得 https://你的用户名.github.io/记账本<br>
-                3. Edge 打开此链接 → 添加到手机桌面<br>
-                4. 后续更新：替换 GitHub 文件即可，数据自动保留
+
+            <!-- 每日 00:00 自动存档 -->
+            <div class="card" data-page-node-id="ClwxWBZTFq1WkIZpUVR216">
+                <div class="saving-header" style="margin-bottom:12px" data-page-node-id="3hHC9xQjXDhwogRxORSRV0">
+                    <div class="saving-title" data-page-node-id="pVDLyht5kRePXdG1gUx1A0">🕛 每日自动存档</div>
+                    <button class="setting-btn" onclick="archiveNow(true)" data-page-node-id="JsldhBrOccbWHNEA9dbU1v">立即存档</button>
+                </div>
+                <div class="archive-tip" data-page-node-id="sJtYk3dKivuaTHLH7rFJtg">
+                    每天 00:00 把全部记账数据做一份快照存在本机浏览器里，最多保留 3 份，超出自动删除最旧的一份。<br data-page-node-id="KGAoH2f8vR5APKvoyXpd8A">
+                    <strong>只在页面打开时才会存档。</strong>0 点时页面若已关闭，会在下次打开时补存一份（内容是打开那刻的数据）。<br>
+                    下次存档时间：<strong id="nextArchiveTime" data-page-node-id="eb9Y63uyRP1HFWVPOuao6S">--</strong><br data-page-node-id="oSCHrc29Rck9ll27PfSwbX">
+                    存档存在本机浏览器内，清理浏览器数据会一并丢失 —— 请开启上方「云端同步」，或用「导出」存成文件。
+                </div>
+                <div id="archiveList" data-page-node-id="rhWdpU7AxcgwcAxCy2LCbV"></div>
+            </div>
+
+            <!-- 云端同步（GitHub Gist） -->
+            <div class="card">
+                <div class="saving-header" style="margin-bottom:12px">
+                    <div class="saving-title">☁️ 云端同步</div>
+                    <div class="saving-status" id="syncBadge" style="background:#edf2f7;color:var(--text-light)">未配置</div>
+                </div>
+                <div class="archive-tip">
+                    把数据自动备份到你的 GitHub 私有 Gist，换手机、清缓存都能找回，也能多设备同步。<br>
+                    Token 只保存在本机浏览器，不会发给任何第三方服务器。建议用 classic Token，<strong>仅勾选 gist 一项权限</strong>。
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">访问令牌</div>
+                    <input type="password" class="setting-input" id="tokenInput" placeholder="ghp_..." autocomplete="off" style="width:150px">
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Gist 编号</div>
+                    <input type="text" class="setting-input" id="gistInput" placeholder="留空自动创建" style="width:150px">
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">自动同步</div>
+                    <button class="setting-btn" id="autoSyncBtn" onclick="toggleAutoSync()">已关闭</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px">
+                    <button class="setting-btn" style="flex:1;padding:12px 6px;font-size:12px" onclick="saveSyncCfg(true)">保存并连接</button>
+                    <button class="setting-btn" style="flex:1;padding:12px 6px;font-size:12px" onclick="syncPush(true)">立即上传</button>
+                    <button class="setting-btn" style="flex:1;padding:12px 6px;font-size:12px" onclick="syncPull(true)">云端恢复</button>
+                </div>
+                <div class="archive-meta" id="syncInfo" style="margin-top:12px">尚未连接云端</div>
+            </div>
+
+            <div class="card" data-page-node-id="fgTxopNmpLCxtrsDF0Krmd">
+                <div class="setting-item" data-page-node-id="fW3Lim54cS0vkIEpVlEtKA">
+                    <div class="setting-label" style="color:var(--danger)" data-page-node-id="bJszcVEgsxgq2HaUkgwhDy">🗑️ 清除所有数据</div>
+                    <button class="setting-btn danger" onclick="clearAll()" data-page-node-id="9F0wWsSggNMVkR2S9Cp90I">清除</button>
+                </div>
+            </div>
+            <div style="margin:20px 16px;padding:16px;background:var(--card);border-radius:16px;font-size:13px;color:var(--text-light);line-height:1.8;box-shadow:var(--shadow)" data-page-node-id="DyGSRw9oMSWty5bJfRdAWt">
+                <strong style="color:var(--text)" data-page-node-id="MKCd4DA5RvqmsrTb02RP7G">💡 推荐方案</strong><br data-page-node-id="TXJ2d2Q3xE9vPrLQn7gC3d">
+                1. 注册 GitHub → 上传本文件 → 开启 Pages<br data-page-node-id="GTeIGNkUaYGFgh6RfQRbfB">
+                2. 获得 https://你的用户名.github.io/记账本<br data-page-node-id="OAfPxAsE6hOMFKEOnppAky">
+                3. Edge 打开此链接 → 添加到手机桌面<br data-page-node-id="yMKy7HlLngyQVCKdje33z6">
+                4. 后续更新：替换 GitHub 文件即可，数据自动保留<br>
+                5. 防丢失：在「云端同步」填入 GitHub Token（勾选 gist 权限），每次记账自动备份到云端
             </div>
         </div>
     </div>
 
-    <button class="fab" onclick="openModal()">+</button>
+    <button class="fab" onclick="openModal()" data-page-node-id="hKZVzBCFiJGEVS5XC8HGwr">+</button>
 
-    <div class="modal-overlay" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header"><div class="modal-title">记一笔</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-            <div class="type-toggle">
-                <button class="type-btn active" data-type="expense" onclick="setType('expense')">支出</button>
-                <button class="type-btn" data-type="income" onclick="setType('income')">收入</button>
+    <div class="modal-overlay" id="addModal" data-page-node-id="9m7121eDEc5gpVDk8Rwfbe">
+        <div class="modal-content" data-page-node-id="qdRWEdgQJpD4xZVFDozgyR">
+            <div class="modal-header" data-page-node-id="S5Wby3lCzHiSw81mJ7rHzm"><div class="modal-title" data-page-node-id="9GN6Axydaakk3n7VqB7hsF">记一笔</div><button class="modal-close" onclick="closeModal()" data-page-node-id="KkhwHjqsMfiihysd10wK9D">✕</button></div>
+            <div class="type-toggle" data-page-node-id="0dMU2kqF16iSqpdCK0PuHL">
+                <button class="type-btn active" data-type="expense" onclick="setType('expense')" data-page-node-id="mAU5ErJE3g7qiCyJDFinZJ">支出</button>
+                <button class="type-btn" data-type="income" onclick="setType('income')" data-page-node-id="Kh27DXOxU5YSlK8PSU7CYx">收入</button>
             </div>
-            <div class="form-group">
-                <label class="form-label">金额</label>
-                <input type="number" class="form-input" id="amountInput" placeholder="0.00" step="0.01">
+            <div class="form-group" data-page-node-id="4Z2Wk4kxkwfkwlp6HXjUQz">
+                <label class="form-label" data-page-node-id="A5aXNjIeOsZmnRrPD6fmPG">金额</label>
+                <input type="number" class="form-input" id="amountInput" placeholder="0.00" step="0.01" data-page-node-id="Zl4duhX5SaaN4EFSCYRvpa">
             </div>
-            <div class="form-group">
-                <label class="form-label">分类</label>
-                <div class="category-grid" id="catGrid"></div>
+            <div class="form-group" data-page-node-id="VWcQTJzZoHa7HAijhqR2GO">
+                <label class="form-label" data-page-node-id="Ey4km8QGcwkpzJ466oAH5o">分类</label>
+                <div class="category-grid" id="catGrid" data-page-node-id="jk0x9E59Usc43mBYdpniOp"></div>
             </div>
-            <div class="form-group">
-                <label class="form-label">日期</label>
-                <input type="date" class="form-input" id="dateInput">
+            <div class="form-group" data-page-node-id="gECB6oWMrTUjtxHq4Po4A2">
+                <label class="form-label" data-page-node-id="BacbcozmROAoyBdhHJ4UKE">日期</label>
+                <input type="date" class="form-input" id="dateInput" data-page-node-id="i13DWdXbBZXjdCdyjWNVeC">
             </div>
-            <div class="form-group">
-                <label class="form-label">备注（选填）</label>
-                <input type="text" class="form-input" id="noteInput" placeholder="例如：周末聚餐">
+            <div class="form-group" data-page-node-id="ApNqcu4CJul2EX9ByPkcPc">
+                <label class="form-label" data-page-node-id="nBXZiogab12Dotcw1a0rge">备注（选填）</label>
+                <input type="text" class="form-input" id="noteInput" placeholder="例如：周末聚餐" data-page-node-id="AG9PiKj6iE5fa5wZ54DlDH">
             </div>
-            <button class="submit-btn" onclick="addTx()">保存</button>
+            <button class="submit-btn" onclick="addTx()" data-page-node-id="lsJDOYS626eM6JeUz2y4lI">保存</button>
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" data-page-node-id="N9R1SVz0jhZLATqRG9GzpU"></div>
 </div>
 
 <script>
@@ -306,11 +365,22 @@ function fmtDate(d) {
 function fmtMonth(d) {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
+function fmtTime(d) {
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+}
 
 // ========== 数据 ==========
 const DB = 'account_v2', GOAL_DB = 'goal_v2';
 let curMonth = fmtMonth(new Date());
 let curType = 'expense', selCat = null, filter = 'all';
+
+// ========== 【新增1】排序状态 ==========
+const SORT_MODES = [
+    {id:'date',       label:'排序：时间↓'},
+    {id:'amountDesc', label:'排序：金额 大→小'},
+    {id:'amountAsc',  label:'排序：金额 小→大'}
+];
+let sortMode = 'date';
 
 const expCats = [
     {id:'food',name:'餐饮',icon:'🍔',color:'#FF6B6B'},
@@ -335,28 +405,332 @@ function setD(d){localStorage.setItem(DB,JSON.stringify(d));}
 function getG(m){return(JSON.parse(localStorage.getItem(GOAL_DB)||'{}'))[m]||3000;}
 function setG(m,v){let g=JSON.parse(localStorage.getItem(GOAL_DB)||'{}');g[m]=parseFloat(v)||0;localStorage.setItem(GOAL_DB,JSON.stringify(g));}
 
-// 新增：重置筛选
+// ========== 【新增2】每日 00:00 自动存档 ==========
+const ARCHIVE_DB   = 'account_archive_v3';   // 存档容器
+const LAST_ARCH_DB = 'account_last_archive_v3'; // 最近一次存档日期
+const ARCHIVE_KEEP = 3;                      // 最多保留份数（3 天）
+let archiveTimer = null;
+
+function getArch(){try{return JSON.parse(localStorage.getItem(ARCHIVE_DB)||'{}');}catch(e){return{};}}
+function setArch(a){localStorage.setItem(ARCHIVE_DB,JSON.stringify(a));}
+
+// 生成一份快照（同一天重复调用会覆盖当天快照，不会重复占位）
+function archiveNow(manual){
+    const now = new Date(), dateKey = fmtDate(now);
+    const a = getArch();
+    a[dateKey] = {
+        date: dateKey,
+        savedAt: fmtDate(now) + ' ' + fmtTime(now),
+        transactions: getD(),
+        goals: JSON.parse(localStorage.getItem(GOAL_DB)||'{}')
+    };
+    // 只保留最新的 ARCHIVE_KEEP 份，其余（最旧的）自动删除
+    const keys = Object.keys(a).sort();
+    while(keys.length > ARCHIVE_KEEP){ delete a[keys.shift()]; }
+    try{
+        setArch(a);
+        localStorage.setItem(LAST_ARCH_DB, dateKey);
+        if(manual === true) showToast('✅ 已生成存档 ' + dateKey);
+    }catch(e){
+        showToast('⚠️ 存档失败：本地存储空间不足');
+    }
+    renderArchives();
+}
+
+// 跨天检测：0 点定时器没跑到（页面被关闭/冻结）时，下次打开补一次
+function archiveTick(){
+    const last = localStorage.getItem(LAST_ARCH_DB);
+    if(last !== fmtDate(new Date())) archiveNow();
+}
+
+// 精确调度到下一个 00:00:02
+function scheduleMidnightArchive(){
+    if(archiveTimer) clearTimeout(archiveTimer);
+    const now = new Date();
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0, 0, 2, 0);
+    archiveTimer = setTimeout(()=>{ archiveNow(); scheduleMidnightArchive(); }, next - now);
+    const el = document.getElementById('nextArchiveTime');
+    if(el) el.textContent = fmtDate(next) + ' 00:00';
+}
+
+function renderArchives(){
+    const el = document.getElementById('archiveList');
+    if(!el) return;
+    const a = getArch(), keys = Object.keys(a).sort().reverse();
+    if(!keys.length){
+        el.innerHTML = '<div style="text-align:center;color:var(--text-light);font-size:13px;padding:14px 0">暂无存档</div>';
+        return;
+    }
+    el.innerHTML = keys.map((k,i)=>{
+        const one = a[k] || {};
+        const txs = one.transactions || {};
+        const total = Object.keys(txs).reduce((s,m)=>s + (txs[m]?txs[m].length:0), 0);
+        const months = Object.keys(txs).length;
+        return `<div class="archive-item">
+            <div class="archive-info">
+                <div class="archive-date">${k}${i===0?' <span style="font-size:11px;color:var(--primary)">最新</span>':''}</div>
+                <div class="archive-meta">存档时间 ${one.savedAt||'-'}<br>共 ${total} 笔记录 · 覆盖 ${months} 个月</div>
+            </div>
+            <div class="archive-actions">
+                <button class="mini-btn primary" onclick="restoreArchive('${k}')">恢复</button>
+                <button class="mini-btn danger" onclick="delArchive('${k}')">删除</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function restoreArchive(dateKey){
+    const one = getArch()[dateKey];
+    if(!one){ showToast('存档不存在'); return; }
+    if(!confirm('确定用 ' + dateKey + ' 的存档覆盖当前全部数据？\n（当前数据会被替换，建议先「导出」备份）'))return;
+    setD(one.transactions || {});
+    localStorage.setItem(GOAL_DB, JSON.stringify(one.goals || {}));
+    initFilterOptions(); refresh(); renderArchives(); markLocalChange();
+    showToast('✅ 已恢复到 ' + dateKey + ' 存档');
+}
+
+function delArchive(dateKey){
+    if(!confirm('确定删除 ' + dateKey + ' 的存档？'))return;
+    const a = getArch(); delete a[dateKey]; setArch(a);
+    if(localStorage.getItem(LAST_ARCH_DB) === dateKey) localStorage.setItem(LAST_ARCH_DB,'');
+    renderArchives(); showToast('已删除该存档');
+}
+
+// ========== 【新增3】云端同步（GitHub Gist）==========
+// 数据备份到你自己的 GitHub secret Gist；Token 仅存本机，不上传第三方。
+const SYNC_DB = 'account_sync_v1';
+const SYNC_FILE = 'jizhang-backup.json';
+const SYNC_DESC = '记账本自动备份';
+const LOCAL_TS_DB = 'account_local_ts_v1';
+let syncing = false, syncTimer = null;
+
+function getSync(){try{return JSON.parse(localStorage.getItem(SYNC_DB)||'{}');}catch(e){return{};}}
+function setSync(o){localStorage.setItem(SYNC_DB,JSON.stringify(o));}
+function localTs(){return parseInt(localStorage.getItem(LOCAL_TS_DB)||'0',10)||0;}
+function syncInfo(msg){const el=document.getElementById('syncInfo');if(el)el.textContent=msg;}
+function setSyncBadge(text,type){
+    const b=document.getElementById('syncBadge');if(!b)return;
+    b.textContent=text;
+    b.className='saving-status'+(type==='ok'?' success':type==='err'?' fail':'');
+    b.style.background = (type==='ok'||type==='err') ? '' : '#edf2f7';
+    b.style.color      = (type==='ok'||type==='err') ? '' : 'var(--text-light)';
+}
+
+// 任何数据变更都记录时间戳；开启自动同步时延迟 2.5 秒上传（避免频繁请求）
+function markLocalChange(){
+    localStorage.setItem(LOCAL_TS_DB, String(Date.now()));
+    const c = getSync();
+    if(c.auto && c.token){
+        if(syncTimer) clearTimeout(syncTimer);
+        syncTimer = setTimeout(()=>syncPush(false), 2500);
+    }
+}
+
+async function ghApi(method,path,body,token){
+    const opt={method,headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}};
+    if(body){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body);}
+    const res=await fetch('https://api.github.com'+path,opt);
+    if(res.status===401) throw new Error('Token 无效或已过期');
+    if(res.status===403) throw new Error('权限不足或请求过于频繁，请确认 Token 勾选了 gist 权限');
+    if(res.status===404) throw new Error('Gist 不存在，编号可能有误或已被删除');
+    if(!res.ok) throw new Error('GitHub 返回错误 '+res.status);
+    return res.json();
+}
+
+function buildPayload(){
+    const now=new Date();
+    return {
+        app:'jizhang', version:3,
+        savedAt: fmtDate(now)+' '+fmtTime(now),
+        savedAtTs: now.getTime(),
+        transactions: getD(),
+        goals: JSON.parse(localStorage.getItem(GOAL_DB)||'{}'),
+        archives: getArch()
+    };
+}
+
+async function findGist(token){
+    const list=await ghApi('GET','/gists?per_page=100',null,token);
+    if(!Array.isArray(list)) return null;
+    const hit=list.find(g=>g&&g.files&&g.files[SYNC_FILE]);
+    return hit?hit.id:null;
+}
+
+async function readCloud(token,gistId){
+    const g=await ghApi('GET','/gists/'+gistId,null,token);
+    const f=g&&g.files&&g.files[SYNC_FILE];
+    if(!f) return null;
+    let content=f.content;
+    if(f.truncated && f.raw_url){
+        const r=await fetch(f.raw_url,{headers:{'Authorization':'Bearer '+token}});
+        content=await r.text();
+    }
+    return JSON.parse(content);
+}
+
+async function doPush(c){
+    const payload=buildPayload();
+    const content=JSON.stringify(payload,null,2);
+    if(c.gistId){
+        await ghApi('PATCH','/gists/'+c.gistId,{files:{[SYNC_FILE]:{content}}},c.token);
+    }else{
+        const g=await ghApi('POST','/gists',{description:SYNC_DESC,public:false,files:{[SYNC_FILE]:{content}}},c.token);
+        c.gistId=g.id; setSync(c);
+    }
+    localStorage.setItem(LOCAL_TS_DB,String(payload.savedAtTs));
+    return payload;
+}
+
+async function syncPush(manual){
+    const c=getSync();
+    if(!c.token){ if(manual) showToast('请先填写 Token'); return; }
+    if(syncing){ if(manual) showToast('正在同步中，请稍候'); return; }
+    syncing=true; setSyncBadge('上传中…','idle');
+    try{
+        if(!c.gistId){
+            const found=await findGist(c.token);
+            if(found){ c.gistId=found; setSync(c); }
+        }
+        // 覆盖保护：云端比本机新时，自动同步直接放弃，手动同步需二次确认
+        if(c.gistId){
+            let cloud=null;
+            try{ cloud=await readCloud(c.token,c.gistId); }catch(e){}
+            const cloudTs=cloud?(cloud.savedAtTs||0):0;
+            if(cloudTs>localTs()+5000){
+                setSyncBadge('云端更新','idle');
+                syncInfo('云端数据更新（'+cloud.savedAt+'），已跳过上传以免覆盖。点「云端恢复」可拉取到本机。');
+                if(!manual) return;
+                if(!confirm('云端数据比本机新（'+cloud.savedAt+'）。\n继续上传会用本机数据覆盖云端，确定？')) return;
+            }
+        }
+        const p=await doPush(c);
+        setSyncBadge('已同步','ok');
+        syncInfo('上次上传：'+p.savedAt+'　Gist：'+c.gistId);
+        if(manual) showToast('✅ 已上传到云端');
+    }catch(e){
+        setSyncBadge('同步失败','err');
+        syncInfo('同步失败：'+e.message);
+        if(manual) showToast('❌ '+e.message);
+    }finally{
+        syncing=false; renderSyncPanel(false);
+    }
+}
+
+async function syncPull(manual){
+    const c=getSync();
+    if(!c.token){ if(manual) showToast('请先填写 Token'); return; }
+    if(syncing){ if(manual) showToast('正在同步中，请稍候'); return; }
+    syncing=true; setSyncBadge('读取中…','idle');
+    try{
+        if(!c.gistId){
+            const found=await findGist(c.token);
+            if(!found){ setSyncBadge('无备份','idle'); if(manual) showToast('云端还没有备份'); return; }
+            c.gistId=found; setSync(c);
+        }
+        const p=await readCloud(c.token,c.gistId);
+        if(!p||!p.transactions) throw new Error('备份内容不完整');
+        setSyncBadge('已连接','ok');
+        if(!confirm('用云端备份覆盖本机数据？\n云端备份时间：'+(p.savedAt||'未知')+'\n本机当前数据将被替换。')) return;
+        setD(p.transactions);
+        if(p.goals) localStorage.setItem(GOAL_DB,JSON.stringify(p.goals));
+        if(p.archives) setArch(p.archives);
+        localStorage.setItem(LOCAL_TS_DB,String(p.savedAtTs||Date.now()));
+        initFilterOptions(); refresh(); renderArchives(); renderSyncPanel(true);
+        syncInfo('上次拉取：'+(p.savedAt||'-')+'　Gist：'+c.gistId);
+        showToast('✅ 已从云端恢复');
+    }catch(e){
+        setSyncBadge('同步失败','err');
+        syncInfo('读取失败：'+e.message);
+        if(manual) showToast('❌ '+e.message);
+    }finally{
+        syncing=false; renderSyncPanel(false);
+    }
+}
+
+function saveSyncCfg(connect){
+    const t=document.getElementById('tokenInput').value.trim();
+    const g=document.getElementById('gistInput').value.trim();
+    const c=getSync();
+    if(t) c.token=t;
+    if(g) c.gistId=g;
+    setSync(c); renderSyncPanel(true);
+    if(!c.token){ showToast('请填写 Token'); return; }
+    showToast('✅ 配置已保存');
+    if(connect) syncPush(true);
+}
+
+function toggleAutoSync(){
+    const c=getSync();
+    if(!c.token){ showToast('请先填写 Token 并保存'); return; }
+    c.auto=!c.auto; setSync(c); renderSyncPanel(true);
+    showToast(c.auto?'已开启自动同步':'已关闭自动同步');
+    if(c.auto) syncPush(true);
+}
+
+// resetBadge 传 false 时只刷新输入框/按钮，不覆盖同步流程设置的实时状态徽章
+function renderSyncPanel(resetBadge){
+    const c=getSync();
+    const ti=document.getElementById('tokenInput');
+    if(ti && !ti.value) ti.value=c.token||'';
+    const gi=document.getElementById('gistInput');
+    if(gi && !gi.value) gi.value=c.gistId||'';
+    const ab=document.getElementById('autoSyncBtn');
+    if(ab) ab.textContent=c.auto?'已开启':'已关闭';
+    if(resetBadge===false) return;
+    if(!c.token) setSyncBadge('未配置','idle');
+    else if(c.gistId) setSyncBadge('已连接','ok');
+    else setSyncBadge('待上传','idle');
+}
+
+// 启动时静默检查云端是否有更新的数据（不自动覆盖本机）
+async function syncAutoCheck(){
+    const c=getSync();
+    if(!c.token||!c.auto||!c.gistId) return;
+    try{
+        const p=await readCloud(c.token,c.gistId);
+        if(!p) return;
+        if((p.savedAtTs||0)>localTs()+5000){
+            setSyncBadge('云端更新','idle');
+            syncInfo('云端有新数据（'+p.savedAt+'），点「云端恢复」可拉取到本机。');
+        }
+    }catch(e){}
+}
+
+// 重置筛选（含排序）
 function resetFilter(){
     document.getElementById('dateFilter').value = 'all';
     document.getElementById('catFilter').value = 'all';
     filter = 'all';
-    document.querySelector('.tx-filter').textContent = '收支类型：全部';
+    sortMode = 'date';
+    document.getElementById('typeFilterBtn').textContent = '收支类型：全部';
+    updateSortBtn();
     renderList();
 }
 
-// 新增：动态填充日期下拉、分类下拉
+// 【新增】排序按钮三态循环：时间↓ → 金额大→小 → 金额小→大
+function toggleSort(){
+    const i = SORT_MODES.findIndex(m=>m.id===sortMode);
+    sortMode = SORT_MODES[(i+1)%SORT_MODES.length].id;
+    updateSortBtn();
+    renderList();
+}
+function updateSortBtn(){
+    const b = document.getElementById('sortBtn');
+    if(!b) return;
+    b.textContent = (SORT_MODES.find(m=>m.id===sortMode)||SORT_MODES[0]).label;
+    b.classList.toggle('active', sortMode !== 'date');
+}
+
+// 动态填充日期下拉、分类下拉
 function initFilterOptions(){
     const monthData = getD()[curMonth]||[];
     const dateSet = new Set();
     const dateSel = document.getElementById('dateFilter');
     const catSel = document.getElementById('catFilter');
-    // 记住当前选中值
     const keepDateVal = dateSel.value;
     const keepCatVal = catSel.value;
-    // 重置选项
     dateSel.innerHTML = `<option value="all">全部日期</option>`;
     catSel.innerHTML = `<option value="all">全部分类</option>`;
-    // 提取本月所有日期并排序
     monthData.forEach(item=>dateSet.add(item.date));
     [...dateSet].sort().forEach(d=>{
         const opt = document.createElement('option');
@@ -364,7 +738,6 @@ function initFilterOptions(){
         opt.textContent = d;
         dateSel.appendChild(opt);
     });
-    // 提取所有收支分类
     const allCats = [...expCats,...incCats];
     allCats.forEach(c=>{
         const opt = document.createElement('option');
@@ -372,7 +745,6 @@ function initFilterOptions(){
         opt.textContent = c.name;
         catSel.appendChild(opt);
     });
-    // 恢复选中状态
     if([...dateSel.options].some(o=>o.value===keepDateVal)) dateSel.value = keepDateVal;
     if([...catSel.options].some(o=>o.value===keepCatVal)) catSel.value = keepCatVal;
 }
@@ -384,13 +756,25 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('goalInput').value = getG(curMonth);
     renderCats();
     initFilterOptions();
+    updateSortBtn();
     refresh();
+
+    // 存档初始化：补跨天存档 + 渲染列表 + 精确调度 0 点 + 兜底轮询
+    archiveTick();
+    renderArchives();
+    scheduleMidnightArchive();
+    setInterval(archiveTick, 60000);              // 每 60s 兜底检查是否跨天
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) archiveTick(); });
+
+    // 云同步初始化
+    renderSyncPanel(true);
+    syncAutoCheck();
 });
 
 function showPage(name){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     if(name==='home'){document.getElementById('pageHome').classList.add('active');}
-    if(name==='settings'){document.getElementById('pageSettings').classList.add('active');}
+    if(name==='settings'){document.getElementById('pageSettings').classList.add('active'); renderArchives();}
 }
 
 function refresh(){
@@ -451,28 +835,40 @@ function renderPie(){
     }).join('');
 }
 
-// 核心：筛选流水+汇总统计
+// 核心：筛选流水 + 排序 + 汇总统计
 function renderList(){
     const raw=getD()[curMonth]||[];
-    // 获取筛选条件
     const chooseDate = document.getElementById('dateFilter').value;
-    const chooseCat = document.getElementById('catFilter').value;
-    // 多层筛选：日期→分类→收支类型
+    const chooseCat  = document.getElementById('catFilter').value;
+
+    // 1) 多层筛选：日期 → 分类 → 收支类型
     let list = raw;
     if(chooseDate!=='all') list = list.filter(t=>t.date===chooseDate);
-    if(chooseCat!=='all') list = list.filter(t=>t.category===chooseCat);
-    if(filter!=='all') list = list.filter(t=>t.type===filter);
-    // 按日期倒序排序
-    list.sort((a,b)=>new Date(b.date)-new Date(a.date));
-    // 计算筛选后的汇总
+    if(chooseCat!=='all')  list = list.filter(t=>t.category===chooseCat);
+    if(filter!=='all')     list = list.filter(t=>t.type===filter);
+
+    // 2) 排序（在"全部日期/全部分类"或任意筛选结果上都生效）
+    if(sortMode==='amountDesc'){
+        list.sort((a,b)=> b.amount - a.amount);
+    }else if(sortMode==='amountAsc'){
+        list.sort((a,b)=> a.amount - b.amount);
+    }else{
+        // 默认：日期倒序（同一天按录入先后倒序，保证顺序稳定）
+        list.sort((a,b)=> a.date===b.date ? b.id-a.id : (a.date<b.date?1:-1));
+    }
+
+    // 3) 筛选后汇总
     let sumInc=0,sumExp=0;
     list.forEach(t=>t.type==='income'?sumInc+=t.amount:sumExp+=t.amount);
-    document.getElementById('filterSummary').innerText = `筛选汇总：收入 ¥${sumInc.toFixed(2)} ｜ 支出 ¥${sumExp.toFixed(2)}`;
+    const sortName=(SORT_MODES.find(m=>m.id===sortMode)||{}).label||'';
+    document.getElementById('filterSummary').innerHTML =
+        `筛选汇总：收入 <strong>¥${sumInc.toFixed(2)}</strong> ｜ 支出 <strong>¥${sumExp.toFixed(2)}</strong> ｜ 结余 ¥${(sumInc-sumExp).toFixed(2)} ｜ 共 ${list.length} 笔`
+        + (sortMode!=='date' ? `<div style="font-size:12px;color:var(--text-light);margin-top:6px">当前按「${sortName.replace('排序：','')}」排列</div>` : '');
+
     const el=document.getElementById('txList');
     if(!list.length){
         el.innerHTML='<div class="empty-state"><div class="emoji">📝</div><div>当前筛选条件下无记账记录</div></div>';return;
     }
-    // 渲染流水条目
     el.innerHTML=list.map(t=>{
         const cats=t.type==='income'?incCats:expCats;
         const c=cats.find(x=>x.id===t.category)||{name:t.category,icon:'💰',color:'#ccc'};
@@ -497,7 +893,6 @@ function changeMonth(delta){
     curMonth=fmtMonth(dt);
     document.getElementById('currentMonth').textContent=curMonth;
     document.getElementById('goalInput').value=getG(curMonth);
-    // 切换月份重建筛选下拉
     initFilterOptions();
     refresh();
 }
@@ -512,7 +907,9 @@ function toggleFilter(){
     const types=['all','expense','income'],labels={all:'收支类型：全部',expense:'收支类型：仅支出',income:'收支类型：仅收入'};
     const i=types.indexOf(filter);
     filter=types[(i+1)%types.length];
-    document.querySelector('.tx-filter').textContent=labels[filter];
+    const b=document.getElementById('typeFilterBtn');
+    b.textContent=labels[filter];
+    b.classList.toggle('active', filter!=='all');
     renderList();
 }
 
@@ -529,7 +926,8 @@ function addTx(){
     const m=date.slice(0,7),d=getD();
     if(!d[m])d[m]=[];
     d[m].push({id:Date.now(),type:curType,amount:amt,category:selCat,date:date,note:note});
-    setD(d);
+    setD(d);                       // 记账后立即写入本机 localStorage
+    markLocalChange();             // 标记数据已变更（开启云同步时自动上传）
     if(m===curMonth){
         initFilterOptions();
         refresh();
@@ -544,6 +942,7 @@ function delTx(id){
     if(!confirm('确定删除这条记录？'))return;
     const d=getD();
     if(d[curMonth]){d[curMonth]=d[curMonth].filter(t=>t.id!==id);setD(d);
+        markLocalChange();
         initFilterOptions();
         refresh();
     }
@@ -551,6 +950,7 @@ function delTx(id){
 
 function saveGoal(){
     setG(curMonth,document.getElementById('goalInput').value);
+    markLocalChange();
     refresh();
 }
 
@@ -560,7 +960,7 @@ function showToast(msg){
 }
 
 function exportData(){
-    const data={transactions:getD(),goals:JSON.parse(localStorage.getItem(GOAL_DB)||'{}'),time:fmtDate(new Date())};
+    const data={transactions:getD(),goals:JSON.parse(localStorage.getItem(GOAL_DB)||'{}'),archives:getArch(),time:fmtDate(new Date())};
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download=`记账备份_${fmtDate(new Date())}.json`;a.click();URL.revokeObjectURL(url);
@@ -575,19 +975,23 @@ function importData(input){
             const d=JSON.parse(e.target.result);
             if(d.transactions)setD(d.transactions);
             if(d.goals)localStorage.setItem(GOAL_DB,JSON.stringify(d.goals));
+            if(d.archives)setArch(d.archives);
             initFilterOptions();
-            refresh();showToast('✅ 恢复成功');
+            refresh();renderArchives();markLocalChange();showToast('✅ 恢复成功');
         }catch(err){showToast('❌ 文件格式错误');}
     };
     reader.readAsText(file);input.value='';
 }
 
 function clearAll(){
-    if(!confirm('⚠️ 确定清除所有数据？不可恢复！'))return;
+    if(!confirm('⚠️ 确定清除本机所有数据？不可恢复！\n（云端备份不会被删除，之后可用「云端恢复」找回）'))return;
     if(!confirm('再次确认：真的要清空吗？'))return;
     localStorage.removeItem(DB);localStorage.removeItem(GOAL_DB);
+    localStorage.removeItem(ARCHIVE_DB);localStorage.removeItem(LAST_ARCH_DB);
+    localStorage.setItem(LOCAL_TS_DB,String(Date.now()));
     initFilterOptions();
-    refresh();showToast('已清除所有数据');
+    refresh();renderArchives();
+    showToast(getSync().gistId?'本机已清空，云端备份仍保留':'已清除所有数据');
 }
 
 document.querySelectorAll('.modal-overlay').forEach(o=>{
