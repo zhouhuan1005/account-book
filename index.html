@@ -287,7 +287,7 @@ body{
                 </div>
                 <div class="setting-item">
                     <div class="setting-label">访问令牌</div>
-                    <input type="password" class="setting-input" id="tokenInput" placeholder="ghp_..." autocomplete="off" style="width:150px">
+                    <input type="text" class="setting-input" id="tokenInput" placeholder="ghp_..." autocomplete="off" spellcheck="false" style="width:150px;-webkit-text-security:disc">
                 </div>
                 <div class="setting-item">
                     <div class="setting-label">Gist 编号</div>
@@ -326,7 +326,7 @@ body{
 
     <div class="modal-overlay" id="addModal" data-page-node-id="9m7121eDEc5gpVDk8Rwfbe">
         <div class="modal-content" data-page-node-id="qdRWEdgQJpD4xZVFDozgyR">
-            <div class="modal-header" data-page-node-id="S5Wby3lCzHiSw81mJ7rHzm"><div class="modal-title" data-page-node-id="9GN6Axydaakk3n7VqB7hsF">记一笔</div><button class="modal-close" onclick="closeModal()" data-page-node-id="KkhwHjqsMfiihysd10wK9D">✕</button></div>
+            <div class="modal-header" data-page-node-id="S5Wby3lCzHiSw81mJ7rHzm"><div class="modal-title" id="modalTitle" data-page-node-id="9GN6Axydaakk3n7VqB7hsF">记一笔</div><button class="modal-close" onclick="closeModal()" data-page-node-id="KkhwHjqsMfiihysd10wK9D">✕</button></div>
             <div class="type-toggle" data-page-node-id="0dMU2kqF16iSqpdCK0PuHL">
                 <button class="type-btn active" data-type="expense" onclick="setType('expense')" data-page-node-id="mAU5ErJE3g7qiCyJDFinZJ">支出</button>
                 <button class="type-btn" data-type="income" onclick="setType('income')" data-page-node-id="Kh27DXOxU5YSlK8PSU7CYx">收入</button>
@@ -347,7 +347,7 @@ body{
                 <label class="form-label" data-page-node-id="nBXZiogab12Dotcw1a0rge">备注（选填）</label>
                 <input type="text" class="form-input" id="noteInput" placeholder="例如：周末聚餐" data-page-node-id="AG9PiKj6iE5fa5wZ54DlDH">
             </div>
-            <button class="submit-btn" onclick="addTx()" data-page-node-id="lsJDOYS626eM6JeUz2y4lI">保存</button>
+            <button class="submit-btn" id="submitBtn" onclick="addTx()" data-page-node-id="lsJDOYS626eM6JeUz2y4lI">保存</button>
         </div>
     </div>
 
@@ -873,7 +873,7 @@ function renderList(){
         const cats=t.type==='income'?incCats:expCats;
         const c=cats.find(x=>x.id===t.category)||{name:t.category,icon:'💰',color:'#ccc'};
         const sign=t.type==='income'?'+':'-';
-        return `<div class="tx-item">
+        return `<div class="tx-item" onclick="editTx(${t.id})">
             <div class="tx-icon" style="background:${c.color}20">${c.icon}</div>
             <div class="tx-info"><div class="tx-category">${c.name}${t.note?' · '+t.note:''}</div><div class="tx-note">${t.date}</div></div>
             <div class="tx-amount ${t.type}">${sign}¥${t.amount.toFixed(2)}</div>
@@ -913,8 +913,33 @@ function toggleFilter(){
     renderList();
 }
 
-function openModal(){document.getElementById('addModal').classList.add('active');selCat=null;renderCats();}
+let editingId = null;   // 非空时弹窗处于"编辑"模式
+
+function openModal(){
+    editingId=null;
+    document.getElementById('modalTitle').textContent='记一笔';
+    document.getElementById('submitBtn').textContent='保存';
+    document.getElementById('addModal').classList.add('active');
+    selCat=null;renderCats();
+}
 function closeModal(){document.getElementById('addModal').classList.remove('active');}
+
+// 点击流水条目 → 进入编辑模式，预填原记录
+function editTx(id){
+    const d=getD();
+    let t=null;
+    for(const k in d){ const hit=d[k].find(x=>x.id===id); if(hit){t=hit;break;} }
+    if(!t) return;
+    editingId=id;
+    setType(t.type);
+    selCat=t.category; renderCats();
+    document.getElementById('amountInput').value=t.amount;
+    document.getElementById('dateInput').value=t.date;
+    document.getElementById('noteInput').value=t.note||'';
+    document.getElementById('modalTitle').textContent='✏️ 编辑记录';
+    document.getElementById('submitBtn').textContent='保存修改';
+    document.getElementById('addModal').classList.add('active');
+}
 
 function addTx(){
     const amt=parseFloat(document.getElementById('amountInput').value);
@@ -925,6 +950,26 @@ function addTx(){
     if(!date){showToast('请选择日期');return;}
     const m=date.slice(0,7),d=getD();
     if(!d[m])d[m]=[];
+    if(editingId){
+        // 编辑模式：更新原记录；日期改到其他月份时，记录随之移动
+        let srcM=null;
+        for(const k in d){ if(d[k].some(t=>t.id===editingId)){ srcM=k; break; } }
+        if(srcM===null){ showToast('记录不存在'); closeModal(); return; }
+        d[srcM]=d[srcM].filter(t=>t.id!==editingId);
+        d[m].push({id:editingId,type:curType,amount:amt,category:selCat,date:date,note:note});
+        setD(d);
+        markLocalChange();
+        if(srcM===curMonth||m===curMonth){
+            initFilterOptions();
+            refresh();
+        }
+        editingId=null;
+        closeModal();
+        document.getElementById('amountInput').value='';
+        document.getElementById('noteInput').value='';
+        showToast('✅ 修改已保存');
+        return;
+    }
     d[m].push({id:Date.now(),type:curType,amount:amt,category:selCat,date:date,note:note});
     setD(d);                       // 记账后立即写入本机 localStorage
     markLocalChange();             // 标记数据已变更（开启云同步时自动上传）
