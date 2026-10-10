@@ -100,25 +100,28 @@ body{
 .fab{position:fixed;bottom:calc(30px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border:none;font-size:28px;box-shadow:var(--shadow);cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center}
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center}
 .modal-overlay.active{display:flex}
-.modal-content{background:var(--card);width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px 20px;animation:slideUp .3s ease;max-height:85vh;overflow-y:auto}
+.modal-content{background:var(--card);width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:14px 16px;animation:slideUp .3s ease;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.modal-title{font-size:20px;font-weight:800}
-.modal-close{background:#edf2f7;border:none;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;color:var(--text-light)}
-.type-toggle{display:flex;background:#edf2f7;border-radius:16px;padding:4px;margin-bottom:20px}
-.type-btn{flex:1;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;background:transparent;color:var(--text-light);transition:all .2s}
+.modal-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.modal-title{font-size:17px;font-weight:800}
+.modal-close{background:#edf2f7;border:none;width:30px;height:30px;border-radius:50%;font-size:17px;cursor:pointer;color:var(--text-light)}
+.type-toggle{display:flex;background:#edf2f7;border-radius:14px;padding:3px;margin-bottom:12px}
+.type-btn{flex:1;padding:9px;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer;background:transparent;color:var(--text-light);transition:all .2s}
 .type-btn.active{background:var(--card);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
 .type-btn.income.active{color:var(--success)}
-.form-group{margin-bottom:18px}
-.form-label{font-size:13px;color:var(--text-light);margin-bottom:8px;display:block;font-weight:600}
-.form-input{width:100%;padding:16px;border:2px solid var(--border);border-radius:16px;font-size:17px;background:#f7fafc;outline:none;transition:all .2s;color:var(--text);font-weight:600}
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--text-light);margin-bottom:5px;display:block;font-weight:600}
+.form-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:14px;font-size:16px;background:#f7fafc;outline:none;transition:all .2s;color:var(--text);font-weight:600}
 .form-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(102,126,234,0.1)}
-.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.category-item{display:flex;flex-direction:column;align-items:center;padding:14px 6px;border-radius:16px;border:2px solid transparent;cursor:pointer;background:#f7fafc;transition:all .2s}
+.form-row{display:flex;gap:10px;margin-bottom:12px}
+.form-row .form-group{flex:1;min-width:0;margin-bottom:0}
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
+.category-item{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:12px;border:2px solid transparent;cursor:pointer;background:#f7fafc;transition:all .2s}
 .category-item.selected{border-color:var(--primary);background:linear-gradient(135deg,rgba(102,126,234,0.08),rgba(118,75,162,0.08));transform:scale(1.05)}
-.category-icon{font-size:28px;margin-bottom:4px}
+.category-icon{font-size:22px;margin-bottom:3px}
 .category-name{font-size:12px;color:var(--text-light);font-weight:600}
-.submit-btn{width:100%;padding:18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border:none;border-radius:16px;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;box-shadow:0 4px 12px rgba(102,126,234,0.3)}
+.submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;margin-top:4px;box-shadow:0 4px 12px rgba(102,126,234,0.3)}
 .submit-btn:active{transform:scale(0.98)}
 .setting-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #f7fafc}
 .setting-item:last-child{border-bottom:none}
@@ -327,6 +330,7 @@ body{
     <div class="modal-overlay" id="addModal" data-page-node-id="9m7121eDEc5gpVDk8Rwfbe">
         <div class="modal-content" data-page-node-id="qdRWEdgQJpD4xZVFDozgyR">
             <div class="modal-header" data-page-node-id="S5Wby3lCzHiSw81mJ7rHzm"><div class="modal-title" id="modalTitle" data-page-node-id="9GN6Axydaakk3n7VqB7hsF">记一笔</div><button class="modal-close" onclick="closeModal()" data-page-node-id="KkhwHjqsMfiihysd10wK9D">✕</button></div>
+            <div class="modal-body">
             <div class="type-toggle" data-page-node-id="0dMU2kqF16iSqpdCK0PuHL">
                 <button class="type-btn active" data-type="expense" onclick="setType('expense')" data-page-node-id="mAU5ErJE3g7qiCyJDFinZJ">支出</button>
                 <button class="type-btn" data-type="income" onclick="setType('income')" data-page-node-id="Kh27DXOxU5YSlK8PSU7CYx">收入</button>
@@ -339,13 +343,16 @@ body{
                 <label class="form-label" data-page-node-id="Ey4km8QGcwkpzJ466oAH5o">分类</label>
                 <div class="category-grid" id="catGrid" data-page-node-id="jk0x9E59Usc43mBYdpniOp"></div>
             </div>
-            <div class="form-group" data-page-node-id="gECB6oWMrTUjtxHq4Po4A2">
-                <label class="form-label" data-page-node-id="BacbcozmROAoyBdhHJ4UKE">日期</label>
-                <input type="date" class="form-input" id="dateInput" data-page-node-id="i13DWdXbBZXjdCdyjWNVeC">
+            <div class="form-row">
+                <div class="form-group" data-page-node-id="gECB6oWMrTUjtxHq4Po4A2" style="flex:0 0 42%">
+                    <label class="form-label" data-page-node-id="BacbcozmROAoyBdhHJ4UKE">日期</label>
+                    <input type="date" class="form-input" id="dateInput" data-page-node-id="i13DWdXbBZXjdCdyjWNVeC">
+                </div>
+                <div class="form-group" data-page-node-id="ApNqcu4CJul2EX9ByPkcPc">
+                    <label class="form-label" data-page-node-id="nBXZiogab12Dotcw1a0rge">备注（选填）</label>
+                    <input type="text" class="form-input" id="noteInput" placeholder="例如：周末聚餐" data-page-node-id="AG9PiKj6iE5fa5wZ54DlDH">
+                </div>
             </div>
-            <div class="form-group" data-page-node-id="ApNqcu4CJul2EX9ByPkcPc">
-                <label class="form-label" data-page-node-id="nBXZiogab12Dotcw1a0rge">备注（选填）</label>
-                <input type="text" class="form-input" id="noteInput" placeholder="例如：周末聚餐" data-page-node-id="AG9PiKj6iE5fa5wZ54DlDH">
             </div>
             <button class="submit-btn" id="submitBtn" onclick="addTx()" data-page-node-id="lsJDOYS626eM6JeUz2y4lI">保存</button>
         </div>
