@@ -384,6 +384,7 @@ let sortMode = 'date';
 
 const expCats = [
     {id:'food',name:'餐饮',icon:'🍔',color:'#FF6B6B'},
+    {id:'groceries',name:'买菜',icon:'🥬',color:'#FFA94D'},
     {id:'transport',name:'交通',icon:'🚇',color:'#4ECDC4'},
     {id:'shopping',name:'购物',icon:'🛍️',color:'#45B7D1'},
     {id:'housing',name:'居住',icon:'🏠',color:'#96CEB4'},
@@ -815,13 +816,16 @@ function renderPie(){
         document.getElementById('pieChart').innerHTML='<svg viewBox="0 0 140 140" width="130" height="130"><circle cx="70" cy="70" r="55" fill="#f7fafc"/><text x="70" y="75" text-anchor="middle" fill="#a0aec0" font-size="13" font-weight="600">暂无支出</text></svg>';
         document.getElementById('pieLegend').innerHTML='';return;
     }
-    const map={},cols=['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#DDA0DD','#FFD93D','#6BCB77','#95A5A6'];
+    const map={},cols=['#FF6B6B','#FFA94D','#4ECDC4','#45B7D1','#96CEB4','#DDA0DD','#FFD93D','#6BCB77','#95A5A6'];
     let total=0;
     d.forEach(t=>{map[t.category]=(map[t.category]||0)+t.amount;total+=t.amount;});
     const sorted=Object.entries(map).sort((a,b)=>b[1]-a[1]);
+    const colorOf=(cat,def,i)=>{const c=expCats.find(x=>x.id===cat);return (c&&c.color)?c.color:(def&&def.color)?def.color:cols[i%cols.length];};
     let svg='',start=0,cx=70,cy=70,r=55;
     sorted.forEach(([cat,amt],i)=>{
-        const ang=(amt/total)*360,end=start+ang,color=cols[i%cols.length];
+        const def=expCats.find(x=>x.id===cat);
+        const color=colorOf(cat,def,i);
+        const ang=(amt/total)*360,end=start+ang;
         const x1=cx+r*Math.cos(start*Math.PI/180),y1=cy+r*Math.sin(start*Math.PI/180);
         const x2=cx+r*Math.cos(end*Math.PI/180),y2=cy+r*Math.sin(end*Math.PI/180);
         const la=ang>180?1:0;
@@ -830,8 +834,9 @@ function renderPie(){
     });
     document.getElementById('pieChart').innerHTML=`<svg viewBox="0 0 140 140" width="130" height="130">${svg}</svg>`;
     document.getElementById('pieLegend').innerHTML=sorted.map(([cat,amt],i)=>{
-        const c=expCats.find(x=>x.id===cat)||{name:cat,color:cols[i%cols.length]};
-        return `<div class="legend-item"><div class="legend-dot" style="background:${c.color}"></div><div class="legend-text">${c.name}</div><div class="legend-value">¥${amt.toFixed(0)}<span style="font-size:11px;color:var(--text-light);margin-left:4px">(${((amt/total)*100).toFixed(0)}%)</span></div></div>`;
+        const def=expCats.find(x=>x.id===cat);
+        const c=def||{name:cat,color:cols[i%cols.length]};
+        return `<div class="legend-item"><div class="legend-dot" style="background:${colorOf(cat,def,i)}"></div><div class="legend-text">${c.name}</div><div class="legend-value">¥${amt.toFixed(0)}<span style="font-size:11px;color:var(--text-light);margin-left:4px">(${((amt/total)*100).toFixed(0)}%)</span></div></div>`;
     }).join('');
 }
 
