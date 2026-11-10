@@ -144,6 +144,29 @@ body{
 .toast.show{transform:translateX(-50%) translateY(0)}
 .page{display:none}
 .page.active{display:block}
+/* 年度汇总 */
+.year-btn{background:rgba(255,255,255,0.25);border:none;padding:7px 14px;border-radius:20px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-left:auto;white-space:nowrap}
+.year-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.year-stat{background:#f7fafc;border-radius:14px;padding:12px 8px;text-align:center}
+.year-stat .lbl{font-size:11px;color:var(--text-light);margin-bottom:4px;font-weight:500}
+.year-stat .val{font-size:18px;font-weight:800}
+.year-stat .val.income{color:var(--success)}
+.year-stat .val.expense{color:var(--danger)}
+.year-stat .val.balance{color:#3182ce}
+.year-chart{width:100%;margin-top:4px}
+.year-chart svg{display:block;width:100%}
+.year-sum{display:flex;justify-content:space-between;align-items:baseline;background:#f7fafc;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--text-light)}
+.year-sum b{font-size:17px;color:var(--text);font-weight:800}
+.year-tip{text-align:center;font-size:12px;color:var(--text-light);margin-top:10px;min-height:18px}
+.year-tip b{color:var(--text);font-size:14px}
+.year-table{max-height:320px;overflow-y:auto}
+.year-row{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid #f7fafc;font-size:13px;cursor:pointer}
+.year-row:last-child{border-bottom:none}
+.year-row .m{width:40px;font-weight:700;flex-shrink:0}
+.year-row .bar-wrap{flex:1;height:8px;background:#edf2f7;border-radius:4px;margin:0 10px;overflow:hidden}
+.year-row .bar-in{height:100%;border-radius:4px}
+.year-row .amt{width:80px;text-align:right;font-weight:700;flex-shrink:0}
+.year-row .pct{width:42px;text-align:right;color:var(--text-light);font-size:11px;flex-shrink:0}
 </style>
 </head>
 <body data-page-node-id="GbP0cL76ikNL2jFD0jzwyL">
@@ -158,6 +181,7 @@ body{
                 <button onclick="changeMonth(-1)" data-page-node-id="BW1SaSm6lWISgeTVUUBydw">‹</button>
                 <span id="currentMonth" data-page-node-id="ZqyJNss3CFjcZmCbJ0COPF">--</span>
                 <button onclick="changeMonth(1)" data-page-node-id="HTOfF2RA6oNF7cdergPC7B">›</button>
+                <button class="year-btn" onclick="openYear()">📊 年度</button>
             </div>
         </div>
         <div class="content" data-page-node-id="7xCgPCgjhR5GVaMh8dkaqt">
@@ -321,6 +345,44 @@ body{
                 3. Edge 打开此链接 → 添加到手机桌面<br data-page-node-id="yMKy7HlLngyQVCKdje33z6">
                 4. 后续更新：替换 GitHub 文件即可，数据自动保留<br>
                 5. 防丢失：在「云端同步」填入 GitHub Token（勾选 gist 权限），每次记账自动备份到云端
+            </div>
+        </div>
+    </div>
+
+    <!-- 年度汇总 -->
+    <div class="page" id="pageYear">
+        <div class="header">
+            <div class="header-top"><h1>📊 年度汇总</h1><button class="settings-btn" onclick="showPage('home')">✕</button></div>
+            <div class="month-selector">
+                <button onclick="changeYear(-1)">‹</button>
+                <span id="yearLabel">--</span>
+                <button onclick="changeYear(1)">›</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="card">
+                <div class="year-stats">
+                    <div class="year-stat"><div class="lbl">年收入</div><div class="val income" id="yearIncome">¥0</div></div>
+                    <div class="year-stat"><div class="lbl">年支出</div><div class="val expense" id="yearExpense">¥0</div></div>
+                    <div class="year-stat"><div class="lbl">年结余</div><div class="val balance" id="yearBalance">¥0</div></div>
+                    <div class="year-stat"><div class="lbl">月均支出</div><div class="val" id="yearAvg">¥0</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="tx-header" style="margin-bottom:12px"><div class="tx-title">📊 按月横向对比</div></div>
+                <div class="filter-panel" style="margin-bottom:12px">
+                    <select class="filter-select" id="yearCatFilter" onchange="renderYear()"></select>
+                </div>
+                <div class="year-sum">
+                    <span>全年合计 <b id="yearSum">¥0</b></span>
+                    <span>月均 <b id="yearSumAvg">¥0</b></span>
+                </div>
+                <div class="year-chart" id="yearChart"></div>
+                <div class="year-tip" id="yearTip">点柱子可查看当月金额</div>
+            </div>
+            <div class="card">
+                <div class="tx-header" style="margin-bottom:8px"><div class="tx-title">📅 月度明细</div><div class="tx-filter" id="yearCount">--</div></div>
+                <div class="year-table" id="yearTable"></div>
             </div>
         </div>
     </div>
@@ -527,6 +589,9 @@ function setSyncBadge(text,type){
 // 任何数据变更都记录时间戳；开启自动同步时延迟 2.5 秒上传（避免频繁请求）
 function markLocalChange(){
     localStorage.setItem(LOCAL_TS_DB, String(Date.now()));
+    // 若正停在年度汇总页，数据变更后同步刷新（记账/删除/导入/恢复都会走到这里）
+    const yp=document.getElementById('pageYear');
+    if(yp && yp.classList.contains('active')) renderYear();
     const c = getSync();
     if(c.auto && c.token){
         if(syncTimer) clearTimeout(syncTimer);
@@ -779,10 +844,137 @@ document.addEventListener('DOMContentLoaded',()=>{
     syncAutoCheck();
 });
 
+// ========== 【新增4】年度汇总 ==========
+let yearSel = new Date().getFullYear();
+let yearData = new Array(12).fill(0);
+let yearKind = 'exp';
+
+function openYear(){
+    yearSel = parseInt(curMonth.split('-')[0],10) || new Date().getFullYear();
+    buildYearCatOptions();
+    showPage('year');
+    renderYear();
+}
+
+// 筛选下拉：全部支出 / 各支出分类 / 全部收入 / 各收入分类
+function buildYearCatOptions(){
+    const sel=document.getElementById('yearCatFilter');
+    if(!sel) return;
+    const keep=sel.value||'exp:all';
+    let h='<option value="exp:all">全部支出</option>';
+    expCats.forEach(c=>{h+=`<option value="exp:${c.id}">支出 · ${c.name}</option>`;});
+    h+='<option value="inc:all">全部收入</option>';
+    incCats.forEach(c=>{h+=`<option value="inc:${c.id}">收入 · ${c.name}</option>`;});
+    sel.innerHTML=h;
+    if([...sel.options].some(o=>o.value===keep)) sel.value=keep;
+    else if(!sel.value) sel.value='exp:all';
+}
+
+function changeYear(delta){
+    yearSel = Math.max(2000, Math.min(2100, yearSel + delta));
+    renderYear();
+}
+
+function renderYear(){
+    const y = String(yearSel);
+    const sel = document.getElementById('yearCatFilter');
+    const flt = (sel && sel.value) || 'exp:all';
+    const parts = flt.split(':');
+    const kind = parts[0], cid = parts[1] || 'all';
+    yearKind = kind;
+
+    const all = getD();
+    let yInc=0, yExp=0;
+    const monthly = new Array(12).fill(0);   // 按当前筛选的每月金额
+    const hasExp  = new Array(12).fill(0);   // 有支出的月份
+
+    Object.keys(all).forEach(mk=>{
+        if(mk.slice(0,4) !== y) return;
+        const mi = parseInt(mk.slice(5,7),10) - 1;
+        if(isNaN(mi) || mi<0 || mi>11) return;
+        (all[mk]||[]).forEach(t=>{
+            if(t.type==='income'){ yInc += t.amount; }
+            else { yExp += t.amount; hasExp[mi] = 1; }
+            if(kind==='exp' && t.type==='expense' && (cid==='all'||t.category===cid)) monthly[mi] += t.amount;
+            if(kind==='inc' && t.type==='income'  && (cid==='all'||t.category===cid)) monthly[mi] += t.amount;
+        });
+    });
+
+    const expMonths    = hasExp.filter(Boolean).length;
+    const total        = monthly.reduce((a,b)=>a+b,0);
+    const selMonths    = monthly.filter(v=>v>0).length;
+
+    document.getElementById('yearLabel').textContent   = y + ' 年';
+    document.getElementById('yearIncome').textContent  = '¥' + yInc.toFixed(2);
+    document.getElementById('yearExpense').textContent = '¥' + yExp.toFixed(2);
+    document.getElementById('yearBalance').textContent = '¥' + (yInc - yExp).toFixed(2);
+    document.getElementById('yearAvg').textContent     = '¥' + (expMonths>0 ? yExp/expMonths : 0).toFixed(2);
+
+    document.getElementById('yearSum').textContent    = '¥' + total.toFixed(2);
+    document.getElementById('yearSumAvg').textContent = '¥' + (selMonths>0 ? total/selMonths : 0).toFixed(2);
+    document.getElementById('yearCount').textContent  = selMonths + ' 个月';
+
+    yearData = monthly;
+    renderYearChart(monthly, kind);
+    renderYearTable(monthly, kind);
+    document.getElementById('yearTip').textContent = '点柱子或明细行可查看当月金额';
+}
+
+function renderYearChart(data, kind){
+    const W=320, H=160, padL=6, padR=6, padT=20, padB=20;
+    const cw=(W-padL-padR)/12, bw=cw*0.6;
+    const plotH=H-padT-padB;
+    const max=Math.max(...data,0);
+    const base = kind==='inc' ? '#48bb78' : '#667eea';
+    const soft = kind==='inc' ? '#9ae6b4' : '#a5b4fc';
+    let grids='', bars='', labels='';
+    [0.5,1].forEach(p=>{
+        const yy=(padT+plotH*(1-p)).toFixed(1);
+        grids+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#edf2f7" stroke-width="1"/>`;
+    });
+    data.forEach((v,i)=>{
+        const x=padL+cw*i+(cw-bw)/2;
+        if(v>0){
+            const h=Math.max((v/max)*plotH,3);
+            const yTop=padT+plotH-h;
+            bars+=`<rect x="${x.toFixed(1)}" y="${yTop.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2.5" fill="${v===max?base:soft}" onclick="yearPick(${i})" style="cursor:pointer"/>`;
+        }
+        labels+=`<text x="${(padL+cw*i+cw/2).toFixed(1)}" y="${H-5}" text-anchor="middle" font-size="10" fill="#a0aec0">${i+1}</text>`;
+    });
+    const empty = max<=0 ? `<text x="${W/2}" y="${(padT+plotH/2).toFixed(1)}" text-anchor="middle" font-size="12" fill="#a0aec0">该年暂无数据</text>` : '';
+    document.getElementById('yearChart').innerHTML =
+        `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${grids}${bars}${labels}${empty}</svg>`;
+}
+
+function renderYearTable(data, kind){
+    const total=data.reduce((a,b)=>a+b,0);
+    const max=Math.max(...data,0);
+    const color = kind==='inc' ? '#48bb78' : '#667eea';
+    let h='';
+    data.forEach((v,i)=>{
+        if(v<=0) return;
+        const pct = total>0 ? (v/total*100) : 0;
+        h+=`<div class="year-row" onclick="yearPick(${i})">
+            <div class="m">${i+1}月</div>
+            <div class="bar-wrap"><div class="bar-in" style="width:${(max>0?(v/max*100):0).toFixed(1)}%;background:${color}"></div></div>
+            <div class="amt">¥${v.toFixed(2)}</div>
+            <div class="pct">${pct.toFixed(0)}%</div>
+        </div>`;
+    });
+    if(!h) h='<div style="text-align:center;color:var(--text-light);font-size:13px;padding:24px 0">该年暂无记录</div>';
+    document.getElementById('yearTable').innerHTML=h;
+}
+
+function yearPick(i){
+    const v = yearData[i]||0;
+    document.getElementById('yearTip').innerHTML = `${yearSel} 年 ${i+1} 月：<b>¥${v.toFixed(2)}</b>`;
+}
+
 function showPage(name){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     if(name==='home'){document.getElementById('pageHome').classList.add('active');}
     if(name==='settings'){document.getElementById('pageSettings').classList.add('active'); renderArchives();}
+    if(name==='year'){document.getElementById('pageYear').classList.add('active');}
 }
 
 function refresh(){
